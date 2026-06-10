@@ -77,7 +77,7 @@ else
     concentrated_core := NormalClosure(G, sub<G | [c[4] : c in mdivs]>);
     semiconcentrated_cores := [NormalClosure(G, sub<G | c[4]>) : c in mdivs];
     concentrated := (#concentrated_core lt #G) select "t" else "f";
-    semiconcentrated := &or[#core lt #G : core in semiconcentrated_cores] select "t" else "f";
+    semiconcentrated := &and[#core lt #G : core in semiconcentrated_cores] select "t" else "f";
     d := LCM([c[1] : c in mdivs]);
     mdivs := [Sprintf("%o|%o|%o|%o|%o", c[1], c[2], c[3], SaveElt(c[4]), Join([SaveElt(g) : g in GeneratorsSequence(S)], ",")) where c := mdivs[i] where S := semiconcentrated_cores[i] : i in [1..#mdivs]];
 end if;
