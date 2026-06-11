@@ -1,0 +1,12 @@
+[submodule "FiniteGroups"]
+	path = FiniteGroups
+	url = https://github.com/roed314/FiniteGroups.git
+[submodule "tamagawa/ExactpAdics2"]
+	path = tamagawa/ExactpAdics2
+	url = https://github.com/cjdoris/ExactpAdics2.git
+[submodule "tamagawa/pAdicGaloisGroup"]
+	path = tamagawa/pAdicGaloisGroup
+	url = https://github.com/cjdoris/pAdicGaloisGroup.git
+[submodule "lmfdb"]
+	path = lmfdb
+	url = https://github.com/LMFDB/lmfdb.git
