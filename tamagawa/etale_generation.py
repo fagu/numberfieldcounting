@@ -77,8 +77,6 @@ def save_etale(labels, poly, gals, todofile, polyfolder, galfolder):
         with open(opj(polyfolder,et_label), "w") as F: # TODO: use opj
             _ = F.write(f"{poly}")
 
-# %attach etale_generation.py
-# save_etale_nbound(2, 6, "gal_todo.txt", "etale_polys", "etale_gals")
 def save_etale_nbound(ps, nbound, todofile, polyfolder, galfolder, Gbound=None):
     for p in ps:
         for labels, poly, gals in make_etale_nbound(p, nbound, Gbound=Gbound):
