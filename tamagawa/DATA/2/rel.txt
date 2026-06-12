@@ -1,0 +1,8 @@
+sigma,tau,x0,x1
+
+sigma2 = sigma^40491355905
+angle = (x0^-3*tau)^40491355905
+y1 = x1^sigma2
+comm = x1^-1*y1^-1*x1*y1
+
+(x0^sigma)^-1*angle*x1^2*comm

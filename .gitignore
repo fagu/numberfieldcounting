@@ -2,6 +2,14 @@
 
 tamagawa/etale_gals
 tamagawa/etale_polys
+tamagawa/DATA/2/race/*
+tamagawa/DATA/2/eltstore/*
+tamagawa/DATA/2/lift.g
+tamagawa/DATA/2/relhash
+tamagawa/DATA/3/race/*
+tamagawa/DATA/3/eltstore/*
+tamagawa/DATA/3/lift.g
+tamagawa/DATA/3/relhash
 
 # todo files output by scripts
 
