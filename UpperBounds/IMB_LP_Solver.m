@@ -15,6 +15,8 @@ function InertialUB_from_IMBs( weight, bounds)
 			An upper bound on the number of fields ordered by the provided inertial height function.
 	*/
 	
+	Qrat := Rationals();
+	
 	N := #weight;
 	
 	// We maximize k
