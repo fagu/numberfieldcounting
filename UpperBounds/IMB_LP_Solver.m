@@ -17,55 +17,49 @@ function InertialUB_from_IMBs( weight, bounds : rational:=false, approx:=10^(-10
 	
 	N := #weight;
 	
+	// We maximize k
+	// among all choices of variables (e_1,...,e_N,k)
+	// subject to the following constraints:
+	//   e_i >= 0 for all i
+	//   k >= 0
+	//   \sum_i e_i weight[i] <= 1   (simplex constraint)
+	//   k <= \sum_i e_i bounds[j][i] for all j   (imb constraint)
+	
+	// Note that all variables are implicitly required to be >= 0 by the lp solvers,
+	// so we do not need to explicitly impose non-negativity.
+	
 	// Simplex constraints first
+	SimplexConstraints := [weight cat [0]];
+	SimplexTargets := [[1]];
+	SimplexRelations := [[-1]];
 	
-	SimplexConstraints := [];
-	for i in [1..N] do
-		v := [0 : i in [1..N]];
-		v[i] := 1;
-		Append(~SimplexConstraints,v);
-	end for;
-	Append(~SimplexConstraints,weight);
+	IMBConstraints := [bound cat [-1] : bound in bounds];
+	IMBTargets := [[0] : bound in bounds];
+	IMBRelations := [[1] : bound in bounds];
 	
-	SimplexTargets:=[ 0 : i in [1..N]] cat [1];
-	SimplexRelations:=[1 : i in [1..N]] cat [-1];
+	Objective := [0 : i in [1..N]] cat [1];
 	
-	// I don't know an easy way to force Magma to use an objective function that's given as a mininimum of linear forms, so I'm going to brute force things a little bit.
+	sol, state := MaximalSolution(
+		Matrix(Qrat, SimplexConstraints cat IMBConstraints),
+		Matrix(Qrat, SimplexRelations cat IMBRelations),
+		Matrix(Qrat, SimplexTargets cat IMBTargets),
+		Matrix(Qrat, [Objective])
+	);
 	
-	Alphas := [];
+	// The problem is always feasible and bounded.
+	assert state eq 0;
 	
-	for obj in [1..#bounds] do
-	
-		// Assume bounds[obj] is the minimum, and use it as the objective function.
-		// Add constraints that ensure it actually is the minimum.
-	
-		min_imb := bounds[obj];
-		
-		MinConstraints := [ [bounds[i][j]-min_imb[j] : j in [1..N]] : i in [1..#bounds] | i ne obj];
-		MinTargets := [ 0 : i in [1..#bounds-1]];
-		MinRelations := [ 1 : i in [1..#bounds-1]];
-		
-		ConstraintMat := Matrix(RealField(), SimplexConstraints cat MinConstraints);
-		TargetMat := Transpose(Matrix(RealField(), [SimplexTargets cat MinTargets]));
-		RelationMat := Transpose(Matrix(RealField(), [SimplexRelations cat MinRelations]));
-		ObjectiveMat := Matrix(RealField(), [min_imb]);
-		
-		MaxPt := MaximalSolution(ConstraintMat,RelationMat,TargetMat,ObjectiveMat);
-		
-		Append(~Alphas,&+[MaxPt[1][i]*min_imb[i] : i in [1..N]]);
-	end for;
-	
-	MaxAlpha:=Max(Alphas);
+	k := sol[1,N+1];
 	
 	if rational eq false then
-		return MaxAlpha;
+		return k;
 	end if;
 	
 	i:=1;
-	CFV := ContinuedFractionValue(ContinuedFraction(MaxAlpha : Bound:=1));
-	while Abs(MaxAlpha - CFV) gt approx do
+	CFV := ContinuedFractionValue(ContinuedFraction(k : Bound:=1));
+	while Abs(k - CFV) gt approx do
 		i:=i+1;
-		CFV := ContinuedFractionValue(ContinuedFraction(MaxAlpha : Bound:=i));
+		CFV := ContinuedFractionValue(ContinuedFraction(k : Bound:=i));
 	end while;
 	
 	return CFV;
