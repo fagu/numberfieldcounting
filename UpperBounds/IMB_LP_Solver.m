@@ -5,7 +5,7 @@
 */
 
 
-function InertialUB_from_IMBs( weight, bounds : rational:=false, approx:=10^(-10))
+function InertialUB_from_IMBs( weight, bounds)
 	/* 
 		Input:
 			The weight of the target inertial height function.  This should be indexed by the conjugacy classes of nontrivial cyclic subgroups of a group G.
@@ -39,7 +39,7 @@ function InertialUB_from_IMBs( weight, bounds : rational:=false, approx:=10^(-10
 	
 	Objective := [0 : i in [1..N]] cat [1];
 	
-	sol, state := MaximalSolution(
+	sol, state := QSoptMaximalSolution(
 		Matrix(Qrat, SimplexConstraints cat IMBConstraints),
 		Matrix(Qrat, SimplexRelations cat IMBRelations),
 		Matrix(Qrat, SimplexTargets cat IMBTargets),
@@ -51,17 +51,6 @@ function InertialUB_from_IMBs( weight, bounds : rational:=false, approx:=10^(-10
 	
 	k := sol[1,N+1];
 	
-	if rational eq false then
-		return k;
-	end if;
-	
-	i:=1;
-	CFV := ContinuedFractionValue(ContinuedFraction(k : Bound:=1));
-	while Abs(k - CFV) gt approx do
-		i:=i+1;
-		CFV := ContinuedFractionValue(ContinuedFraction(k : Bound:=i));
-	end while;
-	
-	return CFV;
+	return k;
 	
 end function;
