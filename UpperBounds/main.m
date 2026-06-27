@@ -287,7 +287,7 @@ function ComputeGroupData(cache, G)
 				>);
 				// Corollary 7.25.
 				if Exponent(AmodW) eq 2 then
-					delta := 2874/10000;
+					delta := 2875/10000;
 					if m le 4 then
 						// Six author JAMS.
 						Append(~class_group_bounds, rec<CGB |
